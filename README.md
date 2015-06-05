@@ -1,7 +1,7 @@
 # AngularIn20TypeScriptVS
 Simple AngularJS Application with TypeScript, you can view video about typescript and angular in 20 minutes at ngconf2015 on [youtube](https://www.youtube.com/watch?list=PLOETEcp3DkCoNnlhE-7fovYvqwVPrRiY7&feature=player_embedded&v=U7NYTKgkZgo)
 
-This is a clone of  [DanWahlin/AngularIn20TypeScript](https://github.com/DanWahlin/AngularIn20TypeScript) it has been modified to run under Visual Studio.
+This is a clone of  [DanWahlin/AngularIn20TypeScript](https://github.com/DanWahlin/AngularIn20TypeScript) it has been modified to run under Visual Studio 2015 vNext
 projrct.jdon
 # Usage
 

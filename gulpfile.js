@@ -1,67 +1,71 @@
+/// <binding BeforeBuild='compile-ts' Clean='clean-ts' ProjectOpened='gen-ts-refs, tsd' />
 'use strict';
 
-var gulp = require('gulp'),
+var
+    gulp = require('gulp'),
     debug = require('gulp-debug'),
     inject = require('gulp-inject'),
-    tsc = require('gulp-typescript'),
     tslint = require('gulp-tslint'),
-    sourcemaps = require('gulp-sourcemaps'),
     del = require('del'),
-    Config = require('./gulpfile.config');
+    tsproject = require('tsproject'),
+    tsd = require('gulp-tsd');
 
-var config = new Config();
+var 
+    source = './wwwroot/',
+    sourceApp = './wwwroot/app',
+    allTypeScript = './wwwroot/app/**/*.ts',
+    typings = './tools/typings/',
 
-/**
- * Generates the app.d.ts references file dynamically from all application *.ts files.
- */
+    appTypeScriptReferences = './tools/typings/typescriptApp.d.ts';
+
+;
+
+
+//load all .d.ts files from https://github.com/borisyankov/DefinitelyTyped branch tsc-1.5.0-alpha
+// see tsd.json
+gulp.task('tsd', function (callback) {
+    tsd({
+        command: 'reinstall',
+        config: './tsd.json'
+    }, callback);
+});
+
+// compile all .ts using TypeScript 1.5-beta with tsconfig.json
+gulp.task('compile-ts', function () {
+    return tsproject.src(sourceApp, { logLevel: 0 })
+      .pipe(debug({ title: 'compile-ts:' }))
+      .pipe(gulp.dest('./'));
+});
+
+
+// Generates the app.d.ts references file dynamically from all application *.ts files.
 gulp.task('gen-ts-refs', function () {
-    var target = gulp.src(config.appTypeScriptReferences);
-    var sources = gulp.src([config.allTypeScript], {read: false});
+    var target = gulp.src(appTypeScriptReferences);
+    var sources = gulp.src([allTypeScript], {read: false});
     return target.pipe(inject(sources, {
         starttag: '//{',
         endtag: '//}',
         transform: function (filepath) {
             return '/// <reference path="../..' + filepath + '" />';
         }
-    })).pipe(gulp.dest(config.typings));
+    })).pipe(gulp.dest(typings));
 });
 
-/**
- * Lint all custom TypeScript files.
- */
+// Lint all custom TypeScript files.
 gulp.task('ts-lint', function () {
-    return gulp.src(config.allTypeScript).pipe(tslint()).pipe(tslint.report('prose'));
+    return gulp.src(allTypeScript)
+      .pipe(debug({ title: 'lint:' }))
+      .pipe(tslint()).pipe(tslint.report('prose'));
 });
 
-/**
- * Compile TypeScript and include references to library and app .d.ts files.
- */
-gulp.task('compile-ts', function () {
-    var sourceTsFiles = [config.allTypeScript,                //path to typescript files
-                         config.libraryTypeScriptDefinitions, //reference to library .d.ts files
-                         config.appTypeScriptReferences];     //reference to app.d.ts files
 
-    var tsResult = gulp.src(sourceTsFiles)
-                       .pipe(sourcemaps.init())
-                       .pipe(tsc({
-                           target: 'ES5',
-                           declarationFiles: false,
-                           noExternalResolve: true
-                       }));
-
-        tsResult.dts.pipe(gulp.dest(config.tsOutputPath));
-        return tsResult.js
-                        .pipe(sourcemaps.write('.'))
-                        .pipe(gulp.dest(config.tsOutputPath));
-});
 
 /**
  * Remove all generated JavaScript files from TypeScript compilation.
  */
 gulp.task('clean-ts', function (cb) {
-  var typeScriptGenFiles = [config.tsOutputPath,            // path to generated JS files
-                            config.sourceApp +'**/*.js',    // path to all JS files auto gen'd by editor
-                            config.sourceApp +'**/*.js.map' // path to all sourcemap files auto gen'd by editor
+  var typeScriptGenFiles = [sourceApp +'/**/*.js',    // path to all JS files auto gen'd by editor
+                            sourceApp +'/**/*.js.map' // path to all sourcemap files auto gen'd by editor
                            ];
 
   // delete the files
@@ -69,7 +73,7 @@ gulp.task('clean-ts', function (cb) {
 });
 
 gulp.task('watch', function() {
-    gulp.watch([config.allTypeScript], ['ts-lint', 'compile-ts', 'gen-ts-refs']);
+    gulp.watch([allTypeScript], ['compile-ts']);
 });
 
-gulp.task('default', ['ts-lint', 'compile-ts', 'gen-ts-refs', 'watch']);
+gulp.task('default', ['tsd', 'compile-ts', 'gen-ts-refs', 'watch']);

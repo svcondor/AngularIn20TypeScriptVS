@@ -1,7 +1,7 @@
 {
   "version": "v4",
   "repo": "borisyankov/DefinitelyTyped",
-  "ref": "master",
+  "ref": "tsc-1.5.0-alpha",
   "path": "tools/typings",
   "bundle": "tools/typings/tsd.d.ts",
   "installed": {

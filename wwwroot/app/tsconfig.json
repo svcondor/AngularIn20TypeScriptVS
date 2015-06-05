@@ -1,0 +1,9 @@
+﻿{
+	"compilerOptions": {
+  "module": "commonjs",
+  "noImplicitAny": false,
+    "sourceMap": true,
+        "listFiles": true
+
+  }	
+}

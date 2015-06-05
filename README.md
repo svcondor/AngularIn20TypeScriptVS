@@ -2,7 +2,7 @@
 Simple AngularJS Application with TypeScript, you can view video about typescript and angular in 20 minutes at ngconf2015 on [youtube](https://www.youtube.com/watch?list=PLOETEcp3DkCoNnlhE-7fovYvqwVPrRiY7&feature=player_embedded&v=U7NYTKgkZgo)
 
 This is a clone of  [DanWahlin/AngularIn20TypeScript](https://github.com/DanWahlin/AngularIn20TypeScript) it has been modified to run under Visual Studio 2015 vNext
-projrct.jdon
+
 # Usage
 
 Use the Comunity Version of Visual Studio 2015 RC or any other VS version.   Download and unzip the ZIP file and open **AngularIn20TypeScriptVS.sln**.   If you've installed the GitHub extension for Visual Studio then you can click "Open in Visual Studio" or you can Clone the repository.
